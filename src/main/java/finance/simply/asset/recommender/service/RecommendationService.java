@@ -8,10 +8,9 @@ import finance.simply.asset.recommender.repository.DealRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.stream.Collectors;
-
 
 @Service
 public class RecommendationService {
@@ -30,34 +29,27 @@ public class RecommendationService {
     this.assetService = assetService;
   }
 
-  public Map<Customer, List<Asset>> getRecommendations(LocalDate date) {
+  public List<Asset> getRecommendations(Integer customerId) {
     List<Deal> deals = dealRepository.findAll();
     List<Customer> customers = customerRepository.findAll();
 
-    Map<Customer, List<Asset>> recommendations = new HashMap<>();
+    List<Asset> recommendations = new ArrayList<>();
 
     for (Customer customer : customers) {
-      double currentPayment = 0.0;
-      List<Asset.Type> customerTypes = new ArrayList<>();
+      if (customer.getId() == customerId) {
+        List<Asset.Type> customerTypes = new ArrayList<>();
 
-      for (Deal deal : deals) {
-        if (deal.getCustomers().contains(customer)) {
-          if (!date.isBefore(deal.getStartDate()) && !date.isAfter(deal.getEndDate())) {
-            int numCustomers = deal.getCustomers().size();
-            double totalAssetCost =
-                    deal.getAssets().stream().reduce(0.0, (subTotal, asset) -> subTotal + asset.getCost(), Double::sum);
-            currentPayment += totalAssetCost / numCustomers;
+        for (Deal deal : deals) {
+          if (deal.getCustomers().contains(customer)) {
+            customerTypes.addAll(deal.getAssets().stream().map(asset -> asset.getType()).collect(Collectors.toList()));
           }
-
-          customerTypes.addAll(deal.getAssets().stream().map(asset -> asset.getType()).collect(Collectors.toList()));
         }
-      }
 
-      List<Asset> unsoldAssets = assetService.getUnsoldAssets();
-      for (Asset asset : unsoldAssets) {
-        if (asset.getCost() <= customer.getAffordability() - currentPayment &&
-            customerTypes.contains(asset.getType())) {
-          recommendations.computeIfAbsent(customer, cust -> new ArrayList<>()).add(asset);
+        List<Asset> unsoldAssets = assetService.getUnsoldAssets();
+        for (Asset asset : unsoldAssets) {
+          if (customerTypes.contains(asset.getType())) {
+            recommendations.add(asset);
+          }
         }
       }
     }
