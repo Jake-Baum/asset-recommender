@@ -64,11 +64,7 @@ We make a recommendation of an asset to a customer based on a few things:
 - The `type` of the asset is one that the customer has already taken a loan out for on a previous asset.  
 i.e. If a customer has taken out a loan for an asset of type `CONSTRUCTION`, then we will only recommend assets with type 
 `CONSTRUCTION`, and not of type `AGRICULTURE`, for example.
-- The customer can afford the loan.  That is, the customer's `affordability` is greater than or equal to the current amount
-that they are paying for all active loans.  The current amount a customer is paying for a single loan is calculated as the sum of 
-the costs of all the assets associated with the loan, divided by the total number of customers that are associated to the loan.
-e.g. if customer `A` currently has two active loans on a certain date for £10,000 each, one of which is split between them and another 
-customer `B`, customer `A`'s current outgoings would be `10,000 + (10,000 / 2) = 15,000`.
+
 
 The application contains a single endpoint that takes in a date value as query parameter, and returns a map of 
 customer IDs to a list of assets that are recommended for them, on that date.
