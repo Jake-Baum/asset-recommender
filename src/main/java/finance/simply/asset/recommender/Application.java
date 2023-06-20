@@ -1,23 +1,21 @@
 package finance.simply.asset.recommender;
 
-import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import org.apache.catalina.Context;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.boot.builder.SpringApplicationBuilder;
-import org.springframework.boot.context.embedded.EmbeddedServletContainerFactory;
-import org.springframework.boot.context.embedded.tomcat.TomcatEmbeddedServletContainerFactory;
-import org.springframework.boot.web.support.SpringBootServletInitializer;
+import org.springframework.boot.web.embedded.tomcat.TomcatServletWebServerFactory;
+import org.springframework.boot.web.server.WebServerFactory;
+import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 @SpringBootApplication
-@EnableJpaRepositories(basePackages = {"finance.simply.asset.recommender.repository"})
-@EntityScan(basePackages = {"finance.simply.asset.recommender.model"})
+@EnableJpaRepositories
+@EntityScan
 public class Application extends SpringBootServletInitializer {
 
   @Override
@@ -30,8 +28,8 @@ public class Application extends SpringBootServletInitializer {
   }
 
   @Bean
-  public EmbeddedServletContainerFactory servletContainer() {
-    return new TomcatEmbeddedServletContainerFactory();
+  public WebServerFactory servletContainer() {
+    return new TomcatServletWebServerFactory();
   }
 
   @Bean
@@ -41,5 +39,6 @@ public class Application extends SpringBootServletInitializer {
     mapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
     return mapper;
   }
+
 }
 

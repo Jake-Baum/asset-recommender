@@ -28,19 +28,14 @@ public class Asset {
   @Enumerated(EnumType.STRING)
   private Type type;
 
-  @ManyToOne
-  @JoinColumn(name = "deal_id")
-  private Deal deal;
-
   public Asset() {
   }
 
-  public Asset(Integer id, String name, double cost, Type type, Deal deal) {
+  public Asset(Integer id, String name, double cost, Type type) {
     this.id = id;
     this.name = name;
     this.cost = cost;
     this.type = type;
-    this.deal = deal;
   }
 
   public Integer getId() {
@@ -73,14 +68,6 @@ public class Asset {
 
   public void setType(Type type) {
     this.type = type;
-  }
-
-  public Deal getDeal() {
-    return deal;
-  }
-
-  public void setDeal(Deal deal) {
-    this.deal = deal;
   }
 
 }
