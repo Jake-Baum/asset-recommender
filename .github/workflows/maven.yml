@@ -29,3 +29,10 @@ jobs:
         
     - name: Run tests
       run: mvn failsafe:integration-test
+
+    - name: Report Test Results
+      uses: dorny/test-reporter@v1
+      with:
+        name: Tests
+        path: '**/target/failsafe-reports/TEST-*.xml'
+        reporter: java-junit
