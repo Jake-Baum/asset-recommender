@@ -28,7 +28,7 @@ jobs:
         cache: maven
         
     - name: Run tests
-      run: mvn failsafe:integration-test
+      run: mvn clean install && mvn failsafe:integration-test
 
     - name: Report Test Results
       uses: dorny/test-reporter@v1
